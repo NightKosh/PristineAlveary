@@ -1,0 +1,4 @@
+[submodule "api/forestry"]
+	path = api/forestry
+	url = https://github.com/ForestryMC/ForestryAPI.git
+	branch = flowerProvider

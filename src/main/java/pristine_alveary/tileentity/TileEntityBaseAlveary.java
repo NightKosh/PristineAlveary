@@ -7,6 +7,7 @@ import forestry.api.apiculture.IBeeRoot;
 import forestry.api.core.IStructureLogic;
 import forestry.api.core.ITileStructure;
 import forestry.api.genetics.AlleleManager;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -229,5 +230,10 @@ public abstract class TileEntityBaseAlveary extends TileEntity implements IAlvea
     @Override
     public boolean canUpdate() {
         return super.canUpdate();
+    }
+
+    @Override
+    public IInventory getInventory() {
+        return null;
     }
 }

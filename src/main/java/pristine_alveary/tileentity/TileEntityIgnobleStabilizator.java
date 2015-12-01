@@ -2,6 +2,7 @@ package pristine_alveary.tileentity;
 
 import forestry.api.apiculture.IAlvearyComponent;
 import forestry.api.apiculture.IBeeListener;
+import net.minecraft.inventory.IInventory;
 import pristine_alveary.listener.IgnobleStabilizatorListener;
 
 /**
