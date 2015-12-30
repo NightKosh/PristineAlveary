@@ -5,7 +5,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import pristine_alveary.tileentity.TileEntityPristinizator;
 
 /**
@@ -48,26 +47,12 @@ public class PristinizatorContainer extends Container {
             ItemStack stackInSlot = slotObject.getStack();
             stack = stackInSlot.copy();
 
-            if (slot == 0) {
-                if (!this.mergeItemStack(stackInSlot, 0, inventorySlots.size(), true)) {
+            if (slot < tileEntity.getInventory().getSizeInventory()) {
+                if (!this.mergeItemStack(stackInSlot, tileEntity.getInventory().getSizeInventory(), 36 + tileEntity.getInventory().getSizeInventory(), true)) {
                     return null;
                 }
-            } else {
-                if (((Slot) this.inventorySlots.get(0)).getHasStack() || !((PristinizatorSlot) this.inventorySlots.get(0)).isItemValid(stackInSlot)) {
-                    return null;
-                }
-
-                if (stackInSlot.hasTagCompound() && stackInSlot.stackSize == 1) {
-                    ((Slot) this.inventorySlots.get(0)).putStack(stackInSlot.copy());
-                    stackInSlot.stackSize = 0;
-                } else if (stackInSlot.stackSize >= 1) {
-                    ItemStack newStack = new ItemStack(stackInSlot.getItem(), 1, stackInSlot.getItemDamage());
-                    if (stackInSlot.hasTagCompound()) {
-                        newStack.setTagCompound((NBTTagCompound) stackInSlot.getTagCompound().copy());
-                    }
-                    ((Slot) this.inventorySlots.get(0)).putStack(newStack);
-                    stackInSlot.stackSize--;
-                }
+            } else if (!this.mergeItemStack(stackInSlot, 0, tileEntity.getInventory().getSizeInventory(), false)) {
+                return null;
             }
 
             if (stackInSlot.stackSize == 0) {

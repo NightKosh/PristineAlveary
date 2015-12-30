@@ -6,6 +6,7 @@ import forestry.api.apiculture.IBeeHousing;
 import forestry.api.core.ITileStructure;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import pristine_alveary.inventory.PristinizatorInventory;
 
 /**
@@ -16,9 +17,10 @@ import pristine_alveary.inventory.PristinizatorInventory;
  */
 public class TileEntityPristinizator extends TileEntityBaseAlveary {
 
-    private IInventory inventory;
+    private PristinizatorInventory inventory;
 
     public TileEntityPristinizator() {
+        super();
         inventory = new PristinizatorInventory();
     }
 
@@ -34,14 +36,18 @@ public class TileEntityPristinizator extends TileEntityBaseAlveary {
             if (updateOnInterval(1000)) {
                 ITileStructure centralTe = this.getCentralTE();
                 if (centralTe != null) {
-                    //TODO check and get resources
-                    IBeeHousing beeHousing = (IBeeHousing) centralTe;
-                    ItemStack queenItem = beeHousing.getQueen();
-                    if (queenItem != null && !this.beeRoot.getMember(queenItem).isNatural()) {
-                        IBee bee = this.beeRoot.getMember(queenItem);
-                        bee.setIsNatural(true);
-                        queenItem = this.beeRoot.getMemberStack(bee, EnumBeeType.QUEEN.ordinal());
-                        beeHousing.setQueen(queenItem);
+                    if (!inventory.isEmpty()) {
+                        IBeeHousing beeHousing = (IBeeHousing) centralTe;
+                        ItemStack queenItem = beeHousing.getQueen();
+                        if (queenItem != null && !this.beeRoot.getMember(queenItem).isNatural()) {
+                            inventory.removeOneItem();
+                            if (this.getWorldObj().rand.nextInt(250) == 0) {
+                                IBee bee = this.beeRoot.getMember(queenItem);
+                                bee.setIsNatural(true);
+                                queenItem = this.beeRoot.getMemberStack(bee, EnumBeeType.QUEEN.ordinal());
+                                beeHousing.setQueen(queenItem);
+                            }
+                        }
                     }
                 }
             }
@@ -50,5 +56,19 @@ public class TileEntityPristinizator extends TileEntityBaseAlveary {
 
     public IInventory getInventory() {
         return inventory;
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
+
+        inventory.readFromNBT(nbt);
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
+
+        inventory.writeToNBT(nbt);
     }
 }

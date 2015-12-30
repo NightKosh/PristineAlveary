@@ -3,6 +3,7 @@ package pristine_alveary.gui.container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import pristine_alveary.ForestryItems;
 
 /**
  * PristineAlveary mod
@@ -18,16 +19,6 @@ public class PristinizatorSlot extends Slot {
 
     @Override
     public boolean isItemValid(ItemStack stack) {
-        return true;//stack.getItem() instanceof ItemGSCorpse;//TODO
-    }
-
-    @Override
-    public int getSlotStackLimit() {
-        return 1;
-    }
-
-    @Override
-    public void onSlotChange(ItemStack p_75220_1_, ItemStack p_75220_2_) {
-        super.onSlotChange(p_75220_1_, p_75220_2_);
+        return stack.getItem().equals(ForestryItems.ambrosia);
     }
 }

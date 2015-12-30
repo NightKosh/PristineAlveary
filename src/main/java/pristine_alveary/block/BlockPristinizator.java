@@ -38,9 +38,7 @@ public class BlockPristinizator extends BlockAlvearyBase {
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
-//        if (world.isRemote) {
-            player.openGui(PristineAlvearyMod.instance, GuiHandler.PRISTINIZATOR_INVENTORY_GUI_ID, world, x, y, z);
-//        }
+        player.openGui(PristineAlvearyMod.instance, GuiHandler.PRISTINIZATOR_INVENTORY_GUI_ID, world, x, y, z);
         return true;
     }
 }
