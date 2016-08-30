@@ -19,8 +19,8 @@ public abstract class BlockAlvearyBase extends BlockContainer {
 
     public BlockAlvearyBase() {
         super(Material.wood);
-        setHardness(1);
-        setCreativeTab(Tabs.tabApiculture);
+        this.setHardness(1);
+        this.setCreativeTab(Tabs.tabApiculture);
     }
 
     @SideOnly(Side.CLIENT)

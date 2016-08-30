@@ -1,11 +1,10 @@
 package pristine_alveary.listener;
 
+import forestry.api.apiculture.DefaultBeeListener;
 import forestry.api.apiculture.EnumBeeType;
 import forestry.api.apiculture.IBee;
-import forestry.api.apiculture.IBeeListener;
-import forestry.api.core.ITileStructure;
-import forestry.api.genetics.IIndividual;
-import net.minecraft.inventory.ISidedInventory;
+import forestry.api.apiculture.IBeeHousingInventory;
+import forestry.api.multiblock.IMultiblockLogicAlveary;
 import net.minecraft.item.ItemStack;
 import pristine_alveary.tileentity.TileEntityBaseAlveary;
 
@@ -15,7 +14,7 @@ import pristine_alveary.tileentity.TileEntityBaseAlveary;
  * @author NightKosh
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
-public class IgnobleStabilizatorListener implements IBeeListener {
+public class IgnobleStabilizatorListener extends DefaultBeeListener {
     private boolean wasChanged = false;
     private TileEntityBaseAlveary alveary;
 
@@ -23,58 +22,53 @@ public class IgnobleStabilizatorListener implements IBeeListener {
         this.alveary = alveary;
     }
 
-    @Override
-    public void onQueenChange(ItemStack queen) {
-    }
-
-    @Override
-    public void wearOutEquipment(int amount) {
-    }
-
     /**
      * Called just before the children are generated, and the queen removed.
      */
     @Override
-    public void onQueenDeath(IBee queen) {
-        if (!queen.isNatural()) {
-            wasChanged = true;
-            queen.setIsNatural(true);
+    public void onQueenDeath() {
+        IMultiblockLogicAlveary logic = alveary.getMultiblockLogic();
+        if (logic.getController().isAssembled()) {
+            IBeeHousingInventory inventory = logic.getController().getBeeInventory();
+            if (inventory != null) {
+                ItemStack queenItem = inventory.getQueen();
+                IBee queen = alveary.beeRoot.getMember(queenItem);
+                if (!queen.isNatural()) {
+                    wasChanged = true;
+                    queen.setIsNatural(true);
+                }
+            }
         }
     }
 
     /**
      * Called after the children have been spawned, but before the queen appears
      */
-    @Override
+//    @Override
     public void onPostQueenDeath(IBee queen) {
         if (wasChanged) {
-            ITileStructure centralTE = alveary.getCentralTE();
-            if (centralTE != null) {
-                ISidedInventory inventory = centralTE.getStructureInventory();
+//            ITileStructure centralTE = alveary.getCentralTE();
+//            if (centralTE != null) {
+            IMultiblockLogicAlveary logic = alveary.getMultiblockLogic();
+            if (logic.getController().isAssembled()) {
+//                ISidedInventory inventory = centralTE.getStructureInventory();
+                IBeeHousingInventory inventory = logic.getController().getBeeInventory();
                 if (inventory != null) {
-                    for (int i = 0; i < inventory.getSizeInventory(); i++) {
-                        ItemStack item = inventory.getStackInSlot(i);
-                        if (item != null && alveary.beeRoot.isMember(item) && !alveary.beeRoot.isDrone(item) && alveary.beeRoot.getMember(item).isNatural()) {
-                            IBee bee = alveary.beeRoot.getMember(item);
-                            bee.setIsNatural(false);
-                            item = alveary.beeRoot.getMemberStack(bee, EnumBeeType.PRINCESS.ordinal());
-                            inventory.setInventorySlotContents(i, item);
-                        }
+//                    for (int i = 0; i < inventory.getSizeInventory(); i++) {
+//                        ItemStack item = inventory.getStackInSlot(i);
+
+                    ItemStack item = inventory.getQueen();
+                    if (item != null && alveary.beeRoot.isMember(item) && !alveary.beeRoot.isDrone(item) && alveary.beeRoot.getMember(item).isNatural()) {
+                        IBee bee = alveary.beeRoot.getMember(item);
+                        bee.setIsNatural(false);
+                        item = alveary.beeRoot.getMemberStack(bee, EnumBeeType.PRINCESS.ordinal());
+//                            inventory.setInventorySlotContents(i, item);
+                        inventory.setQueen(item);
                     }
                 }
             }
-            wasChanged = false;
-            queen.setIsNatural(false);
         }
-    }
-
-    @Override
-    public boolean onPollenRetrieved(IBee queen, IIndividual pollen, boolean isHandled) {
-        return false;
-    }
-
-    @Override
-    public boolean onEggLaid(IBee queen) {
-        return false;
+        wasChanged = false;
+        queen.setIsNatural(false);
     }
 }

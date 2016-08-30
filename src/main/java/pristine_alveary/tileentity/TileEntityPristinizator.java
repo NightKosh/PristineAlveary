@@ -2,8 +2,8 @@ package pristine_alveary.tileentity;
 
 import forestry.api.apiculture.EnumBeeType;
 import forestry.api.apiculture.IBee;
-import forestry.api.apiculture.IBeeHousing;
-import forestry.api.core.ITileStructure;
+import forestry.api.apiculture.IBeeHousingInventory;
+import forestry.api.multiblock.IMultiblockLogicAlveary;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,28 +24,23 @@ public class TileEntityPristinizator extends TileEntityBaseAlveary {
         inventory = new PristinizatorInventory();
     }
 
-    @Override
-    public void initialize() {
-
-    }
-
-    @Override
     protected void updateServerSide() {
-        super.updateServerSide();
         if (hasMaster()) {
             if (updateOnInterval(1000)) {
-                ITileStructure centralTe = this.getCentralTE();
-                if (centralTe != null) {
+//                ITileStructure centralTe = this.getCentralTE();
+//                if (centralTe != null) {
+                IMultiblockLogicAlveary logic = this.getMultiblockLogic();
+                if (logic.getController().isAssembled()) {
                     if (!inventory.isEmpty()) {
-                        IBeeHousing beeHousing = (IBeeHousing) centralTe;
-                        ItemStack queenItem = beeHousing.getQueen();
+                        IBeeHousingInventory beeHousingInventory = logic.getController().getBeeInventory();
+                        ItemStack queenItem = beeHousingInventory.getQueen();
                         if (queenItem != null && !this.beeRoot.getMember(queenItem).isNatural()) {
                             inventory.removeOneItem();
                             if (this.getWorldObj().rand.nextInt(250) == 0) {
                                 IBee bee = this.beeRoot.getMember(queenItem);
                                 bee.setIsNatural(true);
                                 queenItem = this.beeRoot.getMemberStack(bee, EnumBeeType.QUEEN.ordinal());
-                                beeHousing.setQueen(queenItem);
+                                beeHousingInventory.setQueen(queenItem);
                             }
                         }
                     }

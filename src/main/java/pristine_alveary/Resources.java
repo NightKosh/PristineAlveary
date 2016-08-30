@@ -21,6 +21,7 @@ public class Resources {
     public static final String GENETIC_DECAY_SUPPRESSOR = MOD_NAME + ":GeneticDecaySuppressor";
     public static final String PRISTINIZATOR = MOD_NAME + ":Pristinizator";
     public static final String LIFE_REDUCES = MOD_NAME + ":LifeReducer";
+    public static final String MUTATOR = MOD_NAME + ":Mutator";
 
     public static final ResourceLocation PRISTINIZATOR_GUI = new ResourceLocation(FORESTRY_MOD_NAME + ":textures/gui/swarmer.png");
 

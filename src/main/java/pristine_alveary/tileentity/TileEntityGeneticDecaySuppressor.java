@@ -1,8 +1,8 @@
 package pristine_alveary.tileentity;
 
-import pristine_alveary.modifier.GeneticDecaySuppressorModifier;
-import forestry.api.apiculture.IAlvearyComponent;
 import forestry.api.apiculture.IBeeModifier;
+import forestry.api.multiblock.IAlvearyComponent;
+import pristine_alveary.modifier.GeneticDecaySuppressorModifier;
 
 /**
  * PristineAlveary mod
@@ -10,7 +10,7 @@ import forestry.api.apiculture.IBeeModifier;
  * @author NightKosh
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
-public class TileEntityGeneticDecaySuppressor extends TileEntityBaseAlveary {
+public class TileEntityGeneticDecaySuppressor extends TileEntityBaseAlveary implements IAlvearyComponent.BeeModifier {
 
     private final IBeeModifier modifier = new GeneticDecaySuppressorModifier();
 
@@ -19,23 +19,7 @@ public class TileEntityGeneticDecaySuppressor extends TileEntityBaseAlveary {
     }
 
     @Override
-    public void initialize() {
-        if (getCentralTE() != null) {
-            ((IAlvearyComponent) getCentralTE()).registerBeeModifier(modifier);
-        }
-    }
-
-    @Override
-    protected void updateServerSide() {
-        super.updateServerSide();
-        if (!updateOnInterval(200)) {
-            return;
-        }
-
-        if (!hasMaster() || !isIntegratedIntoStructure()) {
-            return;
-        }
-
-        ((IAlvearyComponent) getCentralTE()).registerBeeModifier(modifier);
+    public IBeeModifier getBeeModifier() {
+        return modifier;
     }
 }
